@@ -264,5 +264,8 @@ window.addEventListener("load", function (event) {
     __initializeKeyPress();
     startNewWord();
 
+    // Hides the address bar in mobile browsers.
+    setTimeout(() => { window.scrollTo(0, 1) }, 0);
+
     alert("Em construção...\n\nPoucas palavras disponíveis no momento!");
 });

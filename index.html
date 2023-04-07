@@ -2,11 +2,16 @@
 <html>
 
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>😎 terminator - adivinhe a palavra</title>
+  <meta name="description" content="Jogo de adivinhar a palavra. Baseado no jogo term.ooo, mas sem limite de palavras por dia!"/>
   <meta name="theme-color" content="#44475a"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+
   <link rel="stylesheet" href="styles/style.css">
+
   <script src="scripts/script.js"></script>
-  <title>😎 terminator</title>
 </head>
 
 <body>
@@ -16,11 +21,11 @@
     <!-- Icons from: https://feathericons.com/ -->
     <div id="icons-menu">
       <div>
-        <img src="assets/bar-chart.svg" class="icon"
+        <img src="assets/bar-chart.svg" class="icon" alt="Estatísticas"
           onclick="alert('Em breve: pontuação e estatísticas do jogador')">
-        <img src="assets/help.svg" class="icon"
+        <img src="assets/help.svg" class="icon" alt="Ajuda"
           onclick="alert('Em breve: tutorial do jogo')">
-        <img src="assets/info.svg" class="icon"
+        <img src="assets/info.svg" class="icon" alt="Sobre"
           onclick="alert('Em breve: créditos e detalhes sobre o jogo')">
       </div>
     </div>
@@ -111,7 +116,9 @@
         <div class="key" id="key-B"><p>B</p></div>
         <div class="key" id="key-N"><p>N</p></div>
         <div class="key" id="key-M"><p>M</p></div>
-        <div class="key" id="key-delete"><img src="assets/delete.svg"></div>
+        <div class="key" id="key-delete">
+          <img src="assets/delete.svg" alt="Apagar">
+        </div>
       </div>
 
       <div class="key-row">
@@ -124,10 +131,10 @@
     <span>Feito por: autavares</span>
     <div id="icons-footer">
       <a href="https://www.linkedin.com/in/autavares/" target="_blank">
-        <img src="assets/linkedin.svg" class="icon-footer">
+        <img src="assets/linkedin.svg" class="icon-footer" alt="Linkedin">
       </a>
       <a href="https://github.com/autavares-dev" target="_blank">
-        <img src="assets/github.svg" class="icon-footer">
+        <img src="assets/github.svg" class="icon-footer" alt="GitHub">
       </a>
     </div>
   </div>
