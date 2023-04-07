@@ -5,6 +5,7 @@
   <meta name="theme-color" content="#44475a"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
   <link rel="stylesheet" href="styles/style.css">
+  <script src="scripts/script.js"></script>
   <title>😎 terminator</title>
 </head>
 
@@ -15,9 +16,12 @@
     <!-- Icons from: https://feathericons.com/ -->
     <div id="icons-menu">
       <div>
-        <img src="assets/bar-chart.svg" class="icon">
-        <img src="assets/help.svg" class="icon">
-        <img src="assets/info.svg" class="icon">
+        <img src="assets/bar-chart.svg" class="icon"
+          onclick="alert('Em breve: pontuação e estatísticas do jogador')">
+        <img src="assets/help.svg" class="icon"
+          onclick="alert('Em breve: tutorial do jogo')">
+        <img src="assets/info.svg" class="icon"
+          onclick="alert('Em breve: créditos e detalhes sobre o jogo')">
       </div>
     </div>
   </div>
@@ -25,19 +29,19 @@
   <div id="main">
     <div id="words">
       <div class="word">
-        <div class="letter letter-not-present"><p>A</p></div>
-        <div class="letter letter-not-present"><p>L</p></div>
-        <div class="letter letter-not-present"><p>T</p></div>
-        <div class="letter letter-correct"><p>O</p></div>
-        <div class="letter letter-wrong-position"><p>S</p></div>
+        <div class="letter letter-active"><p></p></div>
+        <div class="letter letter-active"><p></p></div>
+        <div class="letter letter-active"><p></p></div>
+        <div class="letter letter-active"><p></p></div>
+        <div class="letter letter-active"><p></p></div>
       </div>
 
       <div class="word">
-        <div class="letter letter-active letter-selected"><p></p></div>
-        <div class="letter letter-active"><p></p></div>
-        <div class="letter letter-active"><p></p></div>
-        <div class="letter letter-active"><p></p></div>
-        <div class="letter letter-active"><p></p></div>
+        <div class="letter letter-disabled"><p></p></div>
+        <div class="letter letter-disabled"><p></p></div>
+        <div class="letter letter-disabled"><p></p></div>
+        <div class="letter letter-disabled"><p></p></div>
+        <div class="letter letter-disabled"><p></p></div>
       </div>
 
       <div class="word">
@@ -111,7 +115,7 @@
       </div>
 
       <div class="key-row">
-        <div class="key enter-key" id="key-ENTER"><p>ENTER</p></div>
+        <div class="key key-enter" id="key-enter"><p>ENTER</p></div>
       </div>
     </div>
   </div>

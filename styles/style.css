@@ -150,19 +150,20 @@ body {
     font-weight: bold;
     background-color: var(--grey);
     color: var(--bg);
-    opacity: 50%;
+    opacity: 65%;
     border-radius: 25%;
 }
 
 .letter-active {
     background-color: var(--blue);
+    color: var(--fg);
     opacity: 60%;
     cursor: pointer;
     transition: 0.25s;
 }
 
 .letter-active:hover {
-    opacity: 75%;
+    opacity: 85%;
 }
 
 .letter-selected {
@@ -211,25 +212,25 @@ body {
     box-shadow: 2px 2px 4px var(--shadow-color);
 }
 
-.enter-key {
-    width: 15vh;
-    max-width: 30vw;
-    background-color: var(--blue);
-}
-
-.key>img {
-    height: 4vh;
-    max-width: 8vw;
-    filter: invert(1);
-    /* Makes delete icon white. */
-}
-
 .key>p {
     font-size: 2vh;
     font-weight: bold;
 }
 
-.enter-key>p {
+.key>img {
+    height: 4vh;
+    max-width: 8vw;
+    /* Makes delete icon white. */
+    filter: invert(1);
+}
+
+.key-enter {
+    width: 15vh;
+    max-width: 30vw;
+    background-color: var(--blue);
+}
+
+.key-enter>p {
     font-size: 3vh;
 }
 
