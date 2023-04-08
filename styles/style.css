@@ -174,16 +174,23 @@ body {
     opacity: 100%;
 }
 
+.letter-correct,
+.letter-wrong-position,
+.letter-not-present {
+    transition: 1s;
+    color: var(--bg) !important;
+}
+
 .letter-correct {
-    background-color: var(--green);
+    background-color: var(--green) !important;
 }
 
 .letter-wrong-position {
-    background-color: var(--yellow);
+    background-color: var(--yellow) !important;
 }
 
 .letter-not-present {
-    background-color: var(--red);
+    background-color: var(--red) !important;
 }
 
 .letter>p {

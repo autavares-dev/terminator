@@ -3585,14 +3585,32 @@ const updateLettersColors = () => {
     const accentuatedWord = WORDS[userWord.join('').toLowerCase()];
 
     for (let i = 0; i < N_LETTERS; i++) {
-        let userLetter = userWord[i].toLowerCase();
+        const userLetterUpper = userWord[i];
+        const userLetter = userLetterUpper.toLowerCase();
+
         let className = "letter ";
         if (userLetter === targetWord[i]) {
             className += "letter-correct";
+
+            let key = document.getElementById("key-" + userLetterUpper);
+            if (key.className.includes("wrong-position")) {
+                key.className = key.className.replace(
+                    "wrong-position", "correct");
+            } else {
+                key.className += " letter-correct";
+            }
         } else if (targetWord.includes(userLetter)) {
             className += "letter-wrong-position";
+
+            let key = document.getElementById("key-" + userLetterUpper);
+            if (!key.className.includes("letter")) {
+                key.className += " letter-wrong-position";
+            }
         } else {
             className += "letter-not-present";
+
+            let key = document.getElementById("key-" + userLetterUpper);
+            key.className += " letter-not-present";
         }
 
         updateLetter(currWordIndex, i, accentuatedWord[i].toUpperCase());
@@ -3618,13 +3636,18 @@ const nextWord = () => {
 
 // TODO: store score stats in localStorage after defeat or victory.
 
+/*
+    FIXME: 'setTimeout' to let the player see the color change before 'alert'
+    not working (in 'defeat' and 'victory').
+*/
+
 const defeat = () => {
     updateLettersColors();
 
     setTimeout(() => {
         alert(
             "Que pena... Você não acertou a palavra: "
-            + targetWord.toUpperCase()
+            + WORDS[targetWord].toUpperCase()
             + "\n\nPressione OK para tentar outra!");
         startNewWord();
     }, 1);
@@ -3636,7 +3659,7 @@ const victory = () => {
     setTimeout(() => {
         alert(
             "Parabéns! Você acertou a palavra: "
-            + targetWord.toUpperCase()
+            + WORDS[targetWord].toUpperCase()
             + "\n\nPressione OK para continuar jogando!");
         startNewWord();
     }, 1);
@@ -3656,7 +3679,9 @@ const submitWord = () => {
             defeat();
         }
     } else {
-        alert("Palavra inválida!\nDeve ter 5 letras e estar presente no dicionário do jogo!");
+        alert(
+            "Palavra inválida!\n"
+            + "Deve ter 5 letras e estar presente no dicionário do jogo!");
     }
 }
 
@@ -3703,6 +3728,14 @@ const startNewWord = () => {
             updateLetterClass(i, j, className);
         }
     }
+
+    // Changes all keys to default class.
+    let keys = document.getElementsByClassName("key");
+    Array.prototype.forEach.call(keys, (key) => {
+        if (key.id !== "key-delete" && key.id !== "key-enter") {
+            key.className = "key";
+        }
+    });
 }
 
 // TODO: add CSS animation for key press feedback.
@@ -3738,13 +3771,16 @@ const __initializeKeyPress = () => {
     });
 }
 
-window.addEventListener("load", function (event) {
+window.addEventListener("load", function () {
     __initializeKeyboard();
     __initializeKeyPress();
     startNewWord();
 
+    // FIXME: not working. Tested on Android, Chrome and Firefox.
     // Hides the address bar in mobile browsers.
     setTimeout(() => { window.scrollTo(0, 1) }, 0);
 
-    alert("Em construção...\n\nPoucas palavras disponíveis no momento!");
+    alert(
+        "Em construção...\n\n"
+        + "Algumas palavras faltando e palavras estranhas presentes!");
 });
