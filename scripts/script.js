@@ -3753,26 +3753,23 @@ const __initializeKeyboard = () => {
 
 // Adds the callbacks for the physical keyboard.
 const __initializeKeyPress = () => {
-    document.addEventListener("keypress", function onEvent(event) {
-        /*
-            FIXME: left/right arrow and backspace key press are not even
-            generating an event. Ttested with an US international keyboard,
-            Linux OS and Firefox browser.
-        */
+    document.addEventListener("keypress", (event) => {
         if (event.key === "Enter") submitWord();
-        else if (event.key === "Backspace") eraseLetter();
+        else enterLetter(event.key);
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Backspace") eraseLetter();
         else if (event.key === "ArrowLeft") previousLetter();
         else if (event.key === "ArrowRight") nextLetter();
-        else enterLetter(event.key);
     });
 }
 
 window.addEventListener("load", function () {
+    // Maps keys elements ids to the HTML element.
     let keys = this.document.getElementsByClassName("key");
     KEYS = {};
-    Array.prototype.forEach.call(keys, key => {
-        KEYS[key.id] = key;
-    });
+    Array.prototype.forEach.call(keys, key => { KEYS[key.id] = key; });
 
     __initializeKeyboard();
     __initializeKeyPress();
