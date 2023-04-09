@@ -152,6 +152,14 @@ body {
     color: var(--bg);
     opacity: 65%;
     border-radius: 25%;
+
+    border-width: 4px;
+    border-style: solid;
+    border-color: transparent;
+
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 .letter-active {
@@ -168,6 +176,7 @@ body {
 
 .letter-selected {
     opacity: 100%;
+    border-color: var(--pink);
 }
 
 .letter-selected:hover {
@@ -217,6 +226,14 @@ body {
     cursor: pointer;
 
     box-shadow: 2px 2px 4px var(--shadow-color);
+
+    border-width: 4px;
+    border-style: solid;
+    border-color: transparent;
+
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 .key>p {
@@ -239,6 +256,20 @@ body {
 
 .key-enter>p {
     font-size: 3vh;
+}
+
+@keyframes key-press {
+    100% {
+        transform: scale(0.9);
+        box-shadow: none;
+        border-color: var(--pink);
+    }
+}
+
+.key-press {
+    animation-name: "key-press";
+    animation-duration: 0.25s;
+    animation-direction: alternate;
 }
 
 /* Small footer bar with credits and links. */

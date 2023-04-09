@@ -3566,6 +3566,9 @@ const updateLetter = (wordIndex, letterIndex, letter) => {
 const enterLetter = (letter) => {
     letter = letter.toUpperCase();
     if (/^[A-Z]$/i.test(letter)) {
+        const keyEl = document.getElementById("key-" + letter);
+        setTimeout(() => { keyEl.classList.add("key-press"); }, 0.3);
+        keyEl.classList.remove("key-press");
         userWord[currLetterIndex] = letter;
         updateUserWord(currLetterIndex);
         nextLetter();
