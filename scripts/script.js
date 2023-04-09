@@ -3505,6 +3505,16 @@ const WORDS = {
 
 let KEYS = {};  // Maps all key class elements ids to the actual DOM element.
 
+/*
+    List with all word class elements and respective letter class elements.
+    Each word is an object:
+    {
+        word: <word class element>,
+        letters: [<letter class element>]
+    }
+*/
+let USER_WORDS = [];
+
 const N_WORDS = 6;
 const N_LETTERS = 5;
 
@@ -3525,8 +3535,7 @@ const chooseRandomWord = () => {
 
 // Changes the class of the HTML element of a letter.
 const updateLetterClass = (wordIndex, letterIndex, className) => {
-    const word = document.getElementsByClassName("word")[wordIndex];
-    let letter = word.getElementsByTagName("div")[letterIndex];
+    let letter = USER_WORDS[wordIndex].letters[letterIndex];
     letter.className = className;
     if (className.includes("active")) {
         letter.onclick = () => { selectLetter(letterIndex) };
@@ -3546,22 +3555,16 @@ const selectLetter = (letterIndex) => {
 
 // Selects the next letter from the current word to be edited..
 const nextLetter = () => {
-    if (currLetterIndex < N_LETTERS - 1) {
-        selectLetter(currLetterIndex + 1);
-    }
+    if (currLetterIndex < N_LETTERS - 1) selectLetter(currLetterIndex + 1);
 }
 
 // Selects the previous letter from the current word to be edited..
 const previousLetter = () => {
-    if (currLetterIndex > 0) {
-        selectLetter(currLetterIndex - 1);
-    }
+    if (currLetterIndex > 0) selectLetter(currLetterIndex - 1);
 }
 
 const updateLetter = (wordIndex, letterIndex, letter) => {
-    const word = document.getElementsByClassName("word")[wordIndex];
-    let letterEl = word.getElementsByTagName('p')[letterIndex];
-    letterEl.innerHTML = letter;
+    USER_WORDS[wordIndex].letters[letterIndex].innerHTML = `<p>${letter}</p>`;
 }
 
 // Edits the current letter.
@@ -3595,6 +3598,7 @@ const updateLettersColors = () => {
 
         let className = "letter ";
         let key = KEYS["key-" + userLetterUpper];
+
         if (userLetter === targetWord[i]) {
             className += "letter-correct";
             if (key.className.includes("wrong-position")) {
@@ -3669,15 +3673,9 @@ const submitWord = () => {
     // TODO: check word ignoring accentuation.
     const word = userWord.join('').toLowerCase();
     if (word.length === N_LETTERS && WORDS.hasOwnProperty(word)) {
-        if (word === targetWord) {
-            victory();
-        }
-        else if (currWordIndex < N_WORDS - 1) {
-            nextWord();
-        }
-        else {
-            defeat();
-        }
+        if (word === targetWord) victory();
+        else if (currWordIndex < N_WORDS - 1) nextWord();
+        else defeat();
     } else {
         alert(
             "Palavra inválida!\n"
@@ -3687,24 +3685,21 @@ const submitWord = () => {
 
 // Updates the DOM elements of the current word entered by the user.
 const updateUserWord = (letterIndex = null) => {
-    const word = document.getElementsByClassName("word")[currWordIndex];
+    const letters = USER_WORDS[currWordIndex].letters;
 
     if (letterIndex !== null) {
-        let letter = word.getElementsByTagName('p')[letterIndex];
-        letter.innerHTML = userWord[letterIndex];
+        letters[letterIndex].innerHTML = `<p>${userWord[letterIndex]}</p>`;
     } else {
         for (let i = 0; i < N_LETTERS; i++) {
-            let letter = word.getElementsByTagName('p')[i];
-            letter.innerHTML = userWord[i];
+            letters[i].innerHTML = `<p>${userWord[i]}</p>`;
         }
     }
 }
 
 const eraseWord = (wordIndex) => {
-    const word = document.getElementsByClassName("word")[wordIndex];
-    let letters = word.getElementsByTagName('p');
+    let letters = USER_WORDS[wordIndex].letters;
     for (let i = 0; i < N_LETTERS; i++) {
-        letters[i].innerHTML = '';
+        letters[i].innerHTML = '<p></p>';
     }
 }
 
@@ -3737,17 +3732,33 @@ const startNewWord = () => {
     };
 }
 
+// Maps keys elements ids to the HTML element.
+const __loadKeys = () => {
+    let keys = document.getElementsByClassName("key");
+    KEYS = {};
+    Array.prototype.forEach.call(keys, key => { KEYS[key.id] = key; });
+}
+
+// Liists all word elements and respective letter elements.
+const __loadWords = () => {
+    USER_WORDS = Array.prototype.map.call(
+        document.getElementsByClassName("word"),
+        (word) => {
+            return {
+                'word': word,
+                'letters': word.getElementsByClassName("letter")
+            }
+        }
+    );
+}
+
 // Adds the callbacks for the virtual keyboard (in the page).
 const __initializeKeyboard = () => {
     for (const [keyId, keyEl] of Object.entries(KEYS)) {
         const keyName = keyId.split("-")[1];
-        if (keyName === "enter") {
-            keyEl.onclick = submitWord
-        } else if (keyName === "delete") {
-            keyEl.onclick = eraseLetter;
-        } else {
-            keyEl.onclick = () => { enterLetter(keyName) }
-        }
+        if (keyName === "enter") keyEl.onclick = submitWord;
+        else if (keyName === "delete") keyEl.onclick = eraseLetter;
+        else keyEl.onclick = () => { enterLetter(keyName) };
     }
 }
 
@@ -3766,13 +3777,12 @@ const __initializeKeyPress = () => {
 }
 
 window.addEventListener("load", function () {
-    // Maps keys elements ids to the HTML element.
-    let keys = this.document.getElementsByClassName("key");
-    KEYS = {};
-    Array.prototype.forEach.call(keys, key => { KEYS[key.id] = key; });
+    __loadKeys();
+    __loadWords();
 
     __initializeKeyboard();
     __initializeKeyPress();
+
     startNewWord();
 
     // FIXME: not working. Tested on Android, Chrome and Firefox.
