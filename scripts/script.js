@@ -3503,6 +3503,8 @@ const WORDS = {
     "utero": "\u00fatero"
 }
 
+let KEYS = {};  // Maps all key class elements ids to the actual DOM element.
+
 const N_WORDS = 6;
 const N_LETTERS = 5;
 
@@ -3566,7 +3568,7 @@ const updateLetter = (wordIndex, letterIndex, letter) => {
 const enterLetter = (letter) => {
     letter = letter.toUpperCase();
     if (/^[A-Z]$/i.test(letter)) {
-        const keyEl = document.getElementById("key-" + letter);
+        const keyEl = KEYS["key-" + letter];
         setTimeout(() => { keyEl.classList.add("key-press"); }, 0.3);
         keyEl.classList.remove("key-press");
         userWord[currLetterIndex] = letter;
@@ -3592,10 +3594,9 @@ const updateLettersColors = () => {
         const userLetter = userLetterUpper.toLowerCase();
 
         let className = "letter ";
+        let key = KEYS["key-" + userLetterUpper];
         if (userLetter === targetWord[i]) {
             className += "letter-correct";
-
-            let key = document.getElementById("key-" + userLetterUpper);
             if (key.className.includes("wrong-position")) {
                 key.className = key.className.replace(
                     "wrong-position", "correct");
@@ -3604,15 +3605,11 @@ const updateLettersColors = () => {
             }
         } else if (targetWord.includes(userLetter)) {
             className += "letter-wrong-position";
-
-            let key = document.getElementById("key-" + userLetterUpper);
             if (!key.className.includes("letter")) {
                 key.className += " letter-wrong-position";
             }
         } else {
             className += "letter-not-present";
-
-            let key = document.getElementById("key-" + userLetterUpper);
             key.className += " letter-not-present";
         }
 
@@ -3733,29 +3730,25 @@ const startNewWord = () => {
     }
 
     // Changes all keys to default class.
-    let keys = document.getElementsByClassName("key");
-    Array.prototype.forEach.call(keys, (key) => {
-        if (key.id !== "key-delete" && key.id !== "key-enter") {
-            key.className = "key";
+    for (const [keyId, keyEl] of Object.entries(KEYS)) {
+        if (keyId !== "key-delete" && keyId !== "key-enter") {
+            keyEl.className = "key";
         }
-    });
+    };
 }
-
-// TODO: add CSS animation for key press feedback.
 
 // Adds the callbacks for the virtual keyboard (in the page).
 const __initializeKeyboard = () => {
-    let keys = document.getElementsByClassName("key");
-    Array.prototype.forEach.call(keys, (key) => {
-        const keyName = key.id.split("-")[1];
+    for (const [keyId, keyEl] of Object.entries(KEYS)) {
+        const keyName = keyId.split("-")[1];
         if (keyName === "enter") {
-            key.onclick = submitWord
+            keyEl.onclick = submitWord
         } else if (keyName === "delete") {
-            key.onclick = eraseLetter;
+            keyEl.onclick = eraseLetter;
         } else {
-            key.onclick = () => { enterLetter(keyName) }
+            keyEl.onclick = () => { enterLetter(keyName) }
         }
-    });
+    }
 }
 
 // Adds the callbacks for the physical keyboard.
@@ -3775,6 +3768,12 @@ const __initializeKeyPress = () => {
 }
 
 window.addEventListener("load", function () {
+    let keys = this.document.getElementsByClassName("key");
+    KEYS = {};
+    Array.prototype.forEach.call(keys, key => {
+        KEYS[key.id] = key;
+    });
+
     __initializeKeyboard();
     __initializeKeyPress();
     startNewWord();
