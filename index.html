@@ -22,16 +22,136 @@
     <div id="icons-menu">
       <div>
         <img src="assets/bar-chart.svg" class="icon" alt="Estatísticas"
-          onclick="alert('Em breve: pontuação e estatísticas do jogador')">
+          onclick="showModal('stats-modal')">
         <img src="assets/help.svg" class="icon" alt="Ajuda"
-          onclick="alert('Em breve: tutorial do jogo')">
+          onclick="showModal('help-modal')">
         <img src="assets/info.svg" class="icon" alt="Sobre"
-          onclick="alert('Em breve: créditos e detalhes sobre o jogo')">
+          onclick="showModal('info-modal')">
       </div>
     </div>
   </div>
 
   <div id="main">
+    <div class="modal" id="invalid-word-modal">
+      <div class="modal-title">
+        <h2><img src="assets/alert-triangle.svg" class="icon"> Palavra inválida!</h2>
+        <img src="assets/x-circle.svg" class="icon" alt="Fechar"
+          onclick="closeModals()">
+      </div>
+
+      <div class="modal-content">
+        <p>A palavra está incompleta ou não consta no banco de palavras do jogo!</p>
+      </div>
+    </div>
+
+    <div class="modal" id="victory-modal">
+      <div class="modal-title">
+        <h2><img src="assets/smile.svg" class="icon"> VITÓRIA!!!</h2>
+        <img src="assets/x-circle.svg" class="icon" alt="Fechar"
+          onclick="closeModals()">
+      </div>
+
+      <div class="modal-content">
+        <h2 style="color: var(--green)">Parabéns!!!</h2>
+        <p>Você acertou a palavra:</p>
+        <h3 id="final-word-victory" style="color: var(--green)"></h3>
+      </div>
+    </div>
+
+    <div class="modal" id="defeat-modal">
+      <div class="modal-title">
+        <h2><img src="assets/frown.svg" class="icon"> DERROTA...</h2>
+        <img src="assets/x-circle.svg" class="icon" alt="Fechar"
+          onclick="closeModals();">
+      </div>
+
+      <div class="modal-content">
+        <h2 style="color: var(--red)">Que pena...</h2>
+        <p>Você errou a palavra:</p>
+        <h3 id="final-word-defeat" style="color: var(--red)"></h3>
+      </div>
+    </div>
+
+    <div class="modal" id="stats-modal">
+      <div class="modal-title">
+        <h2><img src="assets/bar-chart.svg" class="icon"> Estatísticas</h2>
+        <img src="assets/x-circle.svg" class="icon" alt="Fechar"
+          onclick="closeModals()">
+      </div>
+
+      <div class="modal-content">
+        <p>Em breve estatísticas das suas partidas aqui...</p>
+      </div>
+    </div>
+
+    <div class="modal" id="help-modal">
+      <div class="modal-title">
+        <h2><img src="assets/help.svg" class="icon"> Ajuda</h2>
+        <img src="assets/x-circle.svg" class="icon" alt="Fechar"
+          onclick="closeModals()">
+      </div>
+
+      <div class="modal-content">
+        <ul>
+          <li>Adivinhe em até 6 tentativas a palavra</li>
+          <li>A sua palavra deve ser válida: as 5 letras preenchidas e presente
+            no banco de palavras do jogo</li>
+          <li>Após entrar com a palavra pressione
+            <div class="styled-enter"><p>ENTER</p></div></li>
+          <li>Será revelado para cada letra:</li>
+          <ul>
+            <li><span style="color: var(--red)"><b>VERMELHO:</b></span>
+              A palavra não tem essa letra</li>
+            <li><span style="color: var(--yellow)"><b>AMARELO:</b></span>
+              A palavra tem essa letra, mas a posição está errada</li>
+            <li><span style="color: var(--green)"><b>VERDE:</b></span>
+              A palavra tem essa letra nesta posição</li>
+          </ul>
+          <li>Se acertar a palavra você será avisado e uma nova é sorteada</li>
+          <li>Após a sexta tentativa, se acertar ou errar será avisado e uma
+            nova é sorteada</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="modal" id="info-modal">
+      <div class="modal-title">
+        <h2><img src="assets/info.svg" class="icon"> Sobre</h2>
+        <img src="assets/x-circle.svg" class="icon" alt="Fechar"
+          onclick="closeModals()">
+      </div>
+
+      <div class="modal-content">
+        <p>
+          Este jogo foi baseado no jogo
+          <a href="https://term.ooo" target="_blank">term.ooo</a>,
+          a versão brasileira do jogo
+          <a href="https://www.nytimes.com/games/wordle/index.html"
+            target="_blank">Wordle</a>.
+        </p>
+
+        <p>Fiz essa página com dois objetivos:</p>
+        <ul>
+          <li>Exercitar meus conhecimentos de HTML, CSS e JS (não utilizei
+            nenhum <i>framework</i>).</li>
+          <li>Criar uma versão sem limite de palavras diárias (apenas uma por
+            dia no term.ooo).</li>
+        </ul>
+
+        <p>Este site <b style="color: var(--red)">NÃO</b> utiliza cookies e
+          <b style="color: var(--red)">NÃO</b> coleta nenhum tipo de dado do
+          usuário.
+        </p>
+        <p>Todas estatísticas das partidas ficam armazenadas localmente no seu
+          navegador, podendo ser apagadas quando quiser.
+        </p>
+
+        <p>Tema de cores baseado no tema
+          <a href="https://draculatheme.com" target="_blank">Dracula</a>.
+        </p>
+      </div>
+    </div>
+
     <div id="words">
       <div class="word">
         <div class="letter letter-active"><p></p></div>

@@ -3522,6 +3522,7 @@ let targetWord = '';  // Word to be guessed by the player.
 let currWordIndex = 0; // Index of word being edited, 0 to 5 (6 attempts).
 let currLetterIndex = 0;  // Index of letter being edited, 0 to 4 (5 letters).
 let userWord = ['', '', '', '', '']; // Current word entered by user.
+let finished = false;
 
 // Selects a new random target word, different from the current one.
 const chooseRandomWord = () => {
@@ -3569,6 +3570,8 @@ const updateLetter = (wordIndex, letterIndex, letter) => {
 
 // Edits the current letter.
 const enterLetter = (letter) => {
+    if (finished) return;
+
     letter = letter.toUpperCase();
     if (/^[A-Z]$/i.test(letter)) {
         const keyEl = KEYS["key-" + letter];
@@ -3582,8 +3585,14 @@ const enterLetter = (letter) => {
 
 // Erases the current letter content.
 const eraseLetter = () => {
-    userWord[currLetterIndex] = '';
-    updateUserWord(currLetterIndex);
+    if (finished) return;
+
+    if (userWord[currLetterIndex] === '') {
+        previousLetter();
+    } else {
+        userWord[currLetterIndex] = '';
+        updateUserWord(currLetterIndex);
+    }
 }
 
 // Updates the background colors of each letter in the current word.
@@ -3632,50 +3641,42 @@ const nextWord = () => {
     }
 }
 
-// TODO: use a custom HTML pop-up dialog instead of JS 'alert'.
-
 // TODO: store score stats in localStorage after defeat or victory.
 
-/*
-    FIXME: 'setTimeout' to let the player see the color change before 'alert'
-    not working (in 'defeat' and 'victory').
-*/
-
 const defeat = () => {
+    closeModals();
+    finished = true;
     updateLettersColors();
-
     setTimeout(() => {
-        alert(
-            "Que pena... Você não acertou a palavra: "
-            + WORDS[targetWord].toUpperCase()
-            + "\n\nPressione OK para tentar outra!");
-        startNewWord();
-    }, 1);
+        document.getElementById("final-word-defeat").innerHTML =
+            `<p>${WORDS[targetWord].toUpperCase()}</p>`;
+        showModal("defeat-modal");
+    }, 750);
 }
 
 const victory = () => {
+    closeModals();
+    finished = true;
     updateLettersColors();
-
     setTimeout(() => {
-        alert(
-            "Parabéns! Você acertou a palavra: "
-            + WORDS[targetWord].toUpperCase()
-            + "\n\nPressione OK para continuar jogando!");
-        startNewWord();
-    }, 1);
+        document.getElementById("final-word-victory").innerHTML =
+            `<p>${WORDS[targetWord].toUpperCase()}</p>`;
+        showModal("victory-modal");
+    }, 750);
 }
 
 const submitWord = () => {
+    if (finished) return;
+
     // TODO: check word ignoring accentuation.
     const word = userWord.join('').toLowerCase();
     if (word.length === N_LETTERS && WORDS.hasOwnProperty(word)) {
         if (word === targetWord) victory();
         else if (currWordIndex < N_WORDS - 1) nextWord();
         else defeat();
+        userWord = ['', '', '', '', ''];
     } else {
-        alert(
-            "Palavra inválida!\n"
-            + "Deve ter 5 letras e estar presente no dicionário do jogo!");
+        showModal("invalid-word-modal");
     }
 }
 
@@ -3785,7 +3786,35 @@ window.addEventListener("load", function () {
     // Hides the address bar in mobile browsers.
     setTimeout(() => { window.scrollTo(0, 1) }, 0);
 
-    alert(
-        "Em construção...\n\n"
-        + "Algumas palavras faltando e palavras estranhas presentes!");
+    showModal("help-modal");
 });
+
+const showModal = (modalId) => {
+    const modals = document.getElementsByClassName("modal");
+    const words = document.getElementById("words");
+    const keyboard = document.getElementById("keyboard");
+    words.classList.remove("main-modal-open");
+    keyboard.classList.remove("main-modal-open");
+
+    Array.prototype.forEach.call(
+        modals,
+        (el) => {
+            if (el.id === modalId) {
+                el.classList.add("modal-open");
+                words.classList.add("main-modal-open");
+                keyboard.classList.add("main-modal-open");
+            } else {
+                el.classList.remove("modal-open");
+            }
+        }
+    );
+}
+
+const closeModals = () => {
+    showModal(null);
+
+    if (finished) {
+        finished = false;
+        startNewWord();
+    }
+}
