@@ -3595,29 +3595,25 @@ const updateLettersColors = () => {
     for (let i = 0; i < N_LETTERS; i++) {
         const userLetterUpper = userWord[i];
         const userLetter = userLetterUpper.toLowerCase();
+        updateLetter(currWordIndex, i, accentuatedWord[i].toUpperCase());
 
         let className = "letter ";
         let key = KEYS["key-" + userLetterUpper];
 
         if (userLetter === targetWord[i]) {
             className += "letter-correct";
-            if (key.className.includes("wrong-position")) {
-                key.className = key.className.replace(
-                    "wrong-position", "correct");
-            } else {
-                key.className += " letter-correct";
-            }
+            key.classList.remove("letter-wrong-position");
+            key.classList.add("letter-correct");
         } else if (targetWord.includes(userLetter)) {
             className += "letter-wrong-position";
             if (!key.className.includes("letter")) {
-                key.className += " letter-wrong-position";
+                key.classList.add("letter-wrong-position");
             }
         } else {
             className += "letter-not-present";
-            key.className += " letter-not-present";
+            key.classList.add("letter-not-present");
         }
 
-        updateLetter(currWordIndex, i, accentuatedWord[i].toUpperCase());
         updateLetterClass(currWordIndex, i, className);
     }
 }
