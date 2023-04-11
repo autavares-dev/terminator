@@ -319,6 +319,7 @@ a {
     box-shadow: 4px 4px 4px var(--shadow-color);
 
     opacity: 0;
+    visibility: hidden;
 
     transition: all 0.3s ease;
 }
@@ -351,6 +352,7 @@ a {
 .modal-open {
     z-index: 10;
     opacity: 1;
+    visibility: visible;
 }
 
 .main-modal-open {
