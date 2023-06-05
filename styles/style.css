@@ -327,6 +327,10 @@ a {
 .modal-content {
     overflow: scroll;
     padding: 1ch;
+
+    /* Hides scroll bars */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .modal-title {
