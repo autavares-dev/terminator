@@ -626,7 +626,6 @@ const WORDS = {
     "coube": "coube",
     "couro": "couro",
     "cousa": "cousa",
-    "couto": "couto",
     "couve": "couve",
     "covas": "covas",
     "covil": "covil",
@@ -2961,6 +2960,10 @@ let currLetterIndex = 0;  // Index of letter being edited, 0 to 4 (5 letters).
 let userWord = ['', '', '', '', '']; // Current word entered by user.
 let finished = false;
 
+let totalGames = 0;
+let totalVictories = 0;
+let victoriesPerAttempt = [0, 0, 0, 0, 0, 0];
+
 // Selects a new random target word, different from the current one.
 const chooseRandomWord = () => {
     let newWord = targetWord;
@@ -3078,7 +3081,48 @@ const nextWord = () => {
     }
 }
 
-// TODO: store score stats in localStorage after defeat or victory.
+// Returns the game statistics stored on local storage as a dict.
+const getStats = () => {
+    const stats = JSON.parse(localStorage.getItem("stats"))
+        ?? { totalGames: 0, victoriesPerAttempt: [0, 0, 0, 0, 0, 0] };
+
+    totalGames = stats.totalGames;
+    totalVictories = stats.victoriesPerAttempt.reduce((sum, x) => sum + x, 0);
+    victoriesPerAttempt = stats.victoriesPerAttempt;
+
+    document.getElementById("total-games").innerText = totalGames;
+    const totalPercent = totalGames > 0
+        ? Math.floor((totalVictories / totalGames) * 100)
+        : 0;
+    document.getElementById("total-victories").innerText =
+        `${totalVictories} (${totalPercent}%)`;
+
+    for (let i = 0; i < 6; i++) {
+        const percent = totalVictories > 0
+            ? Math.floor((victoriesPerAttempt[i] / totalVictories) * 100)
+            : 0;
+        document.getElementById(`attempt-${i + 1}`).innerText = `(${percent}%)`;
+        document.getElementById(`bar-${i + 1}`).style.flex = percent;
+        document.getElementById(`empty-${i + 1}`).style.flex = 100 - percent;
+    }
+
+    return stats;
+}
+
+const clearStats = () => {
+    localStorage.setItem(
+        "stats",
+        JSON.stringify(
+            { totalGames: 0, victoriesPerAttempt: [0, 0, 0, 0, 0, 0] }));
+}
+
+// Saves final result of a game to the statistics in local storage.
+const saveResult = (isVictory, nAttempts) => {
+    let stats = getStats();
+    stats.totalGames += 1;
+    if (isVictory) stats.victoriesPerAttempt[nAttempts - 1] += 1;
+    localStorage.setItem("stats", JSON.stringify(stats));
+}
 
 const defeat = () => {
     closeModals();
@@ -3108,9 +3152,18 @@ const submitWord = () => {
     // TODO: check word ignoring accentuation.
     const word = userWord.join('').toLowerCase();
     if (word.length === N_LETTERS && WORDS.hasOwnProperty(word)) {
-        if (word === targetWord) victory();
-        else if (currWordIndex < N_WORDS - 1) nextWord();
-        else defeat();
+        if (word === targetWord) {
+            saveResult(true, currWordIndex + 1);
+            victory();
+        }
+        else if (currWordIndex < N_WORDS - 1) {
+            nextWord();
+        }
+        else {
+            saveResult(false, currWordIndex + 1);
+            defeat();
+        }
+
         userWord = ['', '', '', '', ''];
     } else {
         showModal("invalid-word-modal");
